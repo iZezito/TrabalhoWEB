@@ -3,11 +3,20 @@ package com.example.trabalhoweb.classes;
 import java.util.ArrayList;
 
 public class Carrinho {
+    int id;
+    int qtd;
+
+    ArrayList<Produto> produtos;
+
+    public Carrinho(){
+
+    }
+
     public Carrinho(ArrayList<Produto> produtos) {
         super();
         this.produtos = produtos;
     }
-    ArrayList<Produto> produtos;
+
     public ArrayList<Produto> getProdutos() {
         return produtos;
     }
@@ -30,5 +39,6 @@ public class Carrinho {
     public void addProduto (Produto p){
         produtos.add(p);
     }
+
 
 }

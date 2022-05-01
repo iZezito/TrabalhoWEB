@@ -1,7 +1,5 @@
 package com.example.trabalhoweb.classes;
 
-import org.springframework.context.annotation.Primary;
-
 import javax.persistence.*;
 
 @Entity

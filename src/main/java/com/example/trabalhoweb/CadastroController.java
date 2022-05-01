@@ -2,8 +2,6 @@ package com.example.trabalhoweb;
 
 import com.example.trabalhoweb.classes.Aaa;
 import com.example.trabalhoweb.classes.Cadastro;
-import com.example.trabalhoweb.classes.Produto;
-import com.example.trabalhoweb.classes.ProdutoRepositorio;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 @Controller
 public class CadastroController {
     Aaa banco;
-
     CadastroController(Aaa contactRepository) {
         this.banco = contactRepository;
     }
@@ -37,6 +34,7 @@ public class CadastroController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
+
         ArrayList<Cadastro> cadastros = (ArrayList<Cadastro>) banco.findAll();
 
 
