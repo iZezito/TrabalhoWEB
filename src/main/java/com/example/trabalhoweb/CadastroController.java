@@ -2,6 +2,8 @@ package com.example.trabalhoweb;
 
 import com.example.trabalhoweb.classes.Aaa;
 import com.example.trabalhoweb.classes.Cadastro;
+import com.example.trabalhoweb.classes.Produto;
+import com.example.trabalhoweb.classes.ProdutoRepositorio;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,9 +20,7 @@ import java.util.ArrayList;
 @Controller
 public class CadastroController {
     Aaa banco;
-    CadastroController(Aaa contactRepository) {
-        this.banco = contactRepository;
-    }
+    CadastroController(Aaa contactRepository) {this.banco = contactRepository;}
 
 
 
@@ -34,13 +34,24 @@ public class CadastroController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(1500);
 
         ArrayList<Cadastro> cadastros = (ArrayList<Cadastro>) banco.findAll();
+        /*
+        if(!session.getAttribute("email").equals(null) && !session.getAttribute("senha").equals(null) && Boolean.parseBoolean((String) session.getAttribute("funcao"))){
+            RequestDispatcher encaminhar = request.getRequestDispatcher("/lojista");
+            encaminhar.forward(request, response);
+        }else if(!session.getAttribute("email").equals(null) && !session.getAttribute("senha").equals(null)){
+            RequestDispatcher encaminhar = request.getRequestDispatcher("/cliente");
+            encaminhar.forward(request, response);
+
+
+        }
+
+         */
 
 
         var email = request.getParameter("email");
-        session.setAttribute("email", email);
-        var emails = session.getAttribute("email");
         var senha = request.getParameter("senha");
 
 
@@ -48,6 +59,9 @@ public class CadastroController {
         for(Cadastro c : cadastros){
             if(email.equals(c.getEmail()) && senha.equals(c.getSenha()) && c.isFuncao()){
                 RequestDispatcher encaminhar = request.getRequestDispatcher("/lojista");
+                session.setAttribute("email", email);
+                session.setAttribute("email", senha);
+                session.setAttribute("funcao", true);
                 encaminhar.forward(request, response);
                 break;
 
@@ -55,14 +69,14 @@ public class CadastroController {
             }else if(email.equals(c.getEmail()) && senha.equals(c.getSenha())){
 
                     request.setAttribute("objeto", c);
-                    RequestDispatcher encaminhar = request.getRequestDispatcher("/cliente");
+                    RequestDispatcher encaminhar = request.getRequestDispatcher("/listaprodutos");
+                    session.setAttribute("email", email);
+                    session.setAttribute("senha", senha);
                     encaminhar.forward(request, response);
                     break;
             }else {
 
                 response.getWriter().println("Credenciais inválidas");
-                response.getWriter().println(c.getEmail());
-                response.getWriter().println(c.getSenha());
             }
         }
 
@@ -84,7 +98,7 @@ public class CadastroController {
         banco.save(cadastro);
         //cadastros.addAll(banco.findAll());
 
-        response.getWriter().println("bbbb");
+        response.getWriter().println("Cadastro Realizado!");
 
     }
 

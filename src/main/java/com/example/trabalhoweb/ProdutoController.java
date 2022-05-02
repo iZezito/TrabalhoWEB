@@ -64,6 +64,8 @@ public class ProdutoController {
         response.getWriter().println("</tbody>");
 
         response.getWriter().println("</table>");
+        response.getWriter().println("<a class=\"nav-link\"href=\"cadastrarproduto.html\">Cadastrar Produto</a>");
+
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");
 

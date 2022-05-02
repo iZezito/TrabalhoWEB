@@ -60,6 +60,8 @@ public class ClienteController {
         }
         response.getWriter().println("</tbody>");
         response.getWriter().println("</table>");
+        response.getWriter().println("<a class=\"nav-link\"href=\"carrinho\">Ver Carrinho</a>");
+        response.getWriter().println("<a class=\"nav-link\"href=\"/index.html\">Sair</a>");
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");
     }
@@ -71,19 +73,19 @@ public class ClienteController {
         var comand = request.getParameter("comand");
 
 
-        Cookie[] cookies = request.getCookies();
-        if(cookies[0]==null){
+        if(request.getCookies() == null){
             Cookie cookie = new Cookie("carrinho", "");
             cookie.setMaxAge(60*60*48);
             response.addCookie(cookie);
         }
+        Cookie[] cookies = request.getCookies();
+
 
         if(comand.equals("add")){
             for(Produto p: arrayList){
                 if(p.getId() == id) {
                     carrinho.addProduto(p);
-                    p.estoque--;
-                    repositorio.flush();
+                    cookies[0].setValue(cookies[0].getValue() + "/"+ id);
                 }
             }
 
@@ -91,13 +93,11 @@ public class ClienteController {
             for(Produto p: arrayList){
                 if(p.getId() == id) {
                     carrinho.removeProduto(id);
-                    p.estoque++;
-                    repositorio.flush();
                 }
             }
 
         }
-        cookies[0].setValue(cookies[0].getValue() + "/"+ id);
+
 
 
 
@@ -120,7 +120,13 @@ public class ClienteController {
         for(Produto p : produtos){
             idP = cookies[0].getValue().substring(inicio, fim);
             inicio = fim + 1;
-            fim += 1;
+            if(fim*2 >= cookies[0].getValue().length()){
+                fim = cookies[0].getValue().length();
+            }else{
+                fim *= 2;
+            }
+
+
 
             ///5/5/
             //1, 2; 2, 3;
@@ -162,8 +168,23 @@ public class ClienteController {
         }
         response.getWriter().println("</tbody>");
         response.getWriter().println("</table>");
+        response.getWriter().println("<button class=\"btn-primary\"><a href=\"finalizarPedido\">Comprar</a></button>");
+        response.getWriter().println("<a class=\"nav-link\"href=\"listaprodutos\">Produtos</a>");
+        response.getWriter().println("<a class=\"nav-link\"href=\"logout\">Sair</a>");
+
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");
 
     }
-}
+    @RequestMapping("/finalizarPedido")
+    public void finalizar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ArrayList<Produto> arrayList= carrinho.getProdutos();
+        for(Produto p : arrayList){
+            p.estoque--;
+            repositorio.flush();
+            carrinho.removeProduto(p.getId());
+        }
+        response.getWriter().println("Pedido Realizado!");
+    }
+
+    }

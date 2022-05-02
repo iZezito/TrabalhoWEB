@@ -1,5 +1,6 @@
 package com.example.trabalhoweb.classes;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
 public class Carrinho {
