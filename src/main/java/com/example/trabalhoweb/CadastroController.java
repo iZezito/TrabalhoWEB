@@ -87,8 +87,6 @@ public class CadastroController {
     @RequestMapping(value = "/cadastro", method = RequestMethod.POST)
     public void cadastro(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
-
         String email = request.getParameter("email");
         String nome = request.getParameter("nome");
         String senha = request.getParameter("senha");
